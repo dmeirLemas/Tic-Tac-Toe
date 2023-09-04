@@ -75,8 +75,28 @@ std::string checkWin() {
 	}
 	if (((grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) || (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) && grid[1][1]){
 			return std::string(1, grid[1][1]) + " Has Won";
+	
+	}else {
+		// Checking for draw
+		bool isDraw = true;
+		for (int i = 0; i < gridSize; ++i){
+			for (int j = 0; j < gridSize; ++j) {
+				if (grid[i][j] == 0){
+					isDraw = false;				
+					break;
+				}
+			}
+			if (!isDraw){
+				break;
+			}
+		}
+		if (isDraw){
+			return "Draw";
+		
+		}else{
+			return "";
+		}
 	}
-	return "";
 }
 
 int main() {
