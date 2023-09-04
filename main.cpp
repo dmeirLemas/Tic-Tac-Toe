@@ -63,18 +63,19 @@ void handleMouseClick(sf::RenderWindow &window, int posX, int posY, int width, i
 	}
 }
 
-std::string checkWin() {
+std::string checkWin(char &currentPlayer) {
+	char winner = (currentPlayer == 'X') ? 'O' : 'X';
 	for (int i = 0; i < gridSize; ++i){
 		if (grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2] && grid[i][0]){
-			return std::string(1, grid[i][0]) + " Has Won";
+			return std::string(1, winner) + " Has Won";
 
 		}else if (grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i] && grid[0][i]){
-			return std::string(1, grid[0][1]) + " Has Won";
+			return std::string(1, winner) + " Has Won";
 
 		} 
 	}
 	if (((grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) || (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) && grid[1][1]){
-			return std::string(1, grid[1][1]) + " Has Won";
+			return std::string(1, winner) + " Has Won";
 	
 	}else {
 		// Checking for draw
@@ -132,12 +133,13 @@ int main() {
 				if (event.mouseButton.button == sf::Mouse::Left) {
 					handleMouseClick(window, posX, posY, width, height, currentPlayer);
 					
-					std::string winner = checkWin();
+					std::string winner = checkWin(currentPlayer);
 					if (!winner.empty()){
 						winnerText.setString(winner);
 					}
 				}
 			} else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R){
+				currentPlayer = 'X';
 				for (int i = 0; i < gridSize; ++i){
 					for (int j = 0; j < gridSize; j++){
 						grid[i][j] = 0;
