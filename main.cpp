@@ -63,9 +63,25 @@ void handleMouseClick(sf::RenderWindow &window, int posX, int posY, int width, i
 	}
 }
 
+std::string checkWin() {
+	for (int i = 0; i < gridSize; ++i){
+		if (grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2] && grid[i][0]){
+			return std::string(1, grid[i][0]) + " Has Won";
+
+		}else if (grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i] && grid[0][i]){
+			return std::string(1, grid[0][1]) + " Has Won";
+
+		} 
+	}
+	if (((grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) || (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) && grid[1][1]){
+			return std::string(1, grid[1][1]) + " Has Won";
+	}
+	return "";
+}
+
 int main() {
 	// Create a window
-	sf::RenderWindow window(sf::VideoMode(500, 500), "Tic-Tac-Toe");
+	sf::RenderWindow window(sf::VideoMode(500, 750), "Tic-Tac-Toe");
 
 	int posX = 75;
 	int posY = 75;
@@ -73,11 +89,20 @@ int main() {
 	int height = 350;
 
 	char currentPlayer = 'X'; // Starting player (X or O)
+	
+	sf::Font font;
+	if (!font.loadFromFile("/Users/demirelmas/Stuff/Coding/TIC-TAC-TOE/Arial.ttf")){
+		return 1;
+	}
+	sf::Text winnerText("", font, 50);
+	winnerText.setFillColor(sf::Color::White);
+	winnerText.setPosition((500 - winnerText.getGlobalBounds().width) / 4, posY + height + 20);
 
 	// Main game loop
 	while (window.isOpen()) {
 		window.clear();
 		drawBoard(window, posX, posY, width, height);
+		window.draw(winnerText);
 
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -86,9 +111,21 @@ int main() {
 		} else if (event.type == sf::Event::MouseButtonPressed) {
 				if (event.mouseButton.button == sf::Mouse::Left) {
 					handleMouseClick(window, posX, posY, width, height, currentPlayer);
+					
+					std::string winner = checkWin();
+					if (!winner.empty()){
+						winnerText.setString(winner);
+					}
 				}
+			} else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R){
+				for (int i = 0; i < gridSize; ++i){
+					for (int j = 0; j < gridSize; j++){
+						grid[i][j] = 0;
+					}
+				}
+				winnerText.setString("");
 			}
-		}
+		}	
 		// Display everything on the window
 		window.display();
 	}
